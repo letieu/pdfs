@@ -10,19 +10,21 @@ const port = 3000;
 // Configure multer for file uploads
 const upload = multer({ dest: 'uploads/' });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // Serve static files from the 'public' directory
 app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// Serve the HTML file
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // Endpoint to handle file uploads
 app.post('/upload', upload.array('pdfs'), (req, res) => {
   const files = req.files;
   const convertedFiles = [];
   const groupName = Date.now().toString();
+
+  // Create a directory to store the converted files
+  fs.mkdirSync(path.join(__dirname, 'public', groupName));
 
   files.forEach((file, index) => {
     const inputFilePath = file.path;
@@ -42,7 +44,7 @@ app.post('/upload', upload.array('pdfs'), (req, res) => {
       }
 
       // Add the link to the converted file
-      convertedFiles.push(`/public/${file.filename}.html`);
+      convertedFiles.push(`/public/${groupName}/${fileName}.html`);
 
       // Check if all files have been processed
       if (convertedFiles.length === files.length) {
