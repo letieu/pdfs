@@ -32,6 +32,7 @@ app.post('/upload', upload.array('pdfs'), (req, res) => {
     const outputFilePath = path.join(
       __dirname,
       'public',
+      'output',
       groupName,
       `${fileName}.html`
     );
@@ -44,7 +45,7 @@ app.post('/upload', upload.array('pdfs'), (req, res) => {
       }
 
       // Add the link to the converted file
-      convertedFiles.push(`/public/${groupName}/${fileName}.html`);
+      convertedFiles.push(`/public/output/${groupName}/${fileName}.html`);
 
       // Check if all files have been processed
       if (convertedFiles.length === files.length) {
