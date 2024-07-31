@@ -24,7 +24,7 @@ app.post('/upload', upload.array('pdfs'), (req, res) => {
   const groupName = Date.now().toString();
 
   // Create a directory to store the converted files
-  fs.mkdirSync(path.join(__dirname, 'public', groupName));
+  fs.mkdirSync(path.join(__dirname, 'public', 'output', groupName));
 
   files.forEach((file, index) => {
     const inputFilePath = file.path;
