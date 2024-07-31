@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to HTML Converter</title>
+</head>
+<body>
+  <h1>Upload PDF Files to Convert to HTML</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="pdfs" multiple accept="application/pdf">
+    <button type="submit">Upload</button>
+  </form>
+  <div id="links"></div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      const linksDiv = document.getElementById('links');
+      linksDiv.innerHTML = '';
+
+      result.links.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link;
+        a.textContent = link;
+        a.target = '_blank';
+        linksDiv.appendChild(a);
+        linksDiv.appendChild(document.createElement('br'));
+      });
+    });
+  </script>
+</body>
+</html>
