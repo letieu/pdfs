@@ -45,6 +45,7 @@ app.post("/upload", upload.array("pdfs"), (req, res) => {
     exec(
       `pdftohtml -noframes ${inputFilePath} ${outputFilePath}`,
       (error, stdout, stderr) => {
+        console.log(stdout);
         if (error) {
           console.error(`Error converting file: ${stderr}`);
           return res.status(500).send("Error converting file");
@@ -79,11 +80,13 @@ function addLinkToHtml(links) {
 
     $("body").attr("bgcolor", "white");
 
+    $("body").prepend(`<br />`);
+
     links
       .filter((l) => l !== link)
       .forEach((link) => {
-      $("body").append(`<a href="${link}">${link}</a><br>`);
-    });
+        $("body").prepend(`<a href="${link}">${link}</a><br>`);
+      });
 
     fs.writeFileSync(filePath, $.html());
   });

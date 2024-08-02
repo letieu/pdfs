@@ -55,33 +55,47 @@
   <h1>Upload PDF Files to Convert to HTML</h1>
   <form id="uploadForm" enctype="multipart/form-data">
     <input type="file" name="pdfs" multiple accept="application/pdf">
-    <button type="submit">Upload</button>
+    <button id="submit-btn" type="submit">Upload</button>
   </form>
   <div id="links"></div>
 
   <script>
     document.getElementById('uploadForm').addEventListener('submit', async (event) => {
       event.preventDefault();
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Uploading...';
+
       const formData = new FormData(event.target);
 
-      const response = await fetch('/upload', {
-        method: 'POST',
-        body: formData
-      });
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
 
-      const result = await response.json();
-      const linksDiv = document.getElementById('links');
-      linksDiv.innerHTML = '';
+        const result = await response.json();
+        const linksDiv = document.getElementById('links');
+        linksDiv.innerHTML = '';
 
-      result.links.forEach(link => {
-        const a = document.createElement('a');
-        a.href = link;
-        a.textContent = link;
-        a.target = '_blank';
-        linksDiv.appendChild(a);
-        linksDiv.appendChild(document.createElement('br'));
-      });
+        result.links.forEach(link => {
+          const a = document.createElement('a');
+          a.href = link;
+          a.textContent = link;
+          a.target = '_blank';
+          linksDiv.appendChild(a);
+          linksDiv.appendChild(document.createElement('br'));
+        });
+      } catch (error) {
+        alert('An error occurred. Please try again.');
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Upload';
+      }
     });
+
   </script>
 </body>
 </html>
